@@ -15,7 +15,7 @@
 * To do things
 * Custom module and plugins  shell/python
 * Testing Ansible roles with Molecule
-* Yaml lint and ansible lint.  YAML syntax 
+* Yaml lint and ansible lint.  YAML syntax
 * Ansible galaxy
 
 ### Add-doc commands
@@ -85,7 +85,8 @@ The URI module allows us to send XML or JSON payload and get the necessary detai
 - name: show debug
   debug: var=java_loc
 ```
-### 2. Retrieve executables – In order to retrieve executables available in remote machine. Ex- to get where bash resides we can use
+### 2. Retrieve executables 
+In order to retrieve executables available in remote machine. Ex- to get where bash resides we can use
 ```
  - name: Where is Bash
    command: bash -c -l "which bash"
@@ -94,12 +95,14 @@ The URI module allows us to send XML or JSON payload and get the necessary detai
  - name: show Bash
    debug: var=whereis_bash
 ```
-### 3. Wait for Port – When ever we run a script and wait for particular port to start we can use
+### 3. Wait for Port
+When ever we run a script and wait for particular port to start we can use
 ```
 - name: Wait for the nexus-iq Port to start
    wait_for: port=8070 delay=60
 ```
-### 4. Template Variables – When ever we want to pass variables to template we can use
+### 4. Template Variables
+When ever we want to pass variables to template we can use
 ```
  - name: copy nexus-iq.sh start script
    template:
@@ -111,12 +114,14 @@ The URI module allows us to send XML or JSON payload and get the necessary detai
      nexus_iq_path: "{{nexus_deploy_location}}"
      bash_is: "{{whereis_bash.stdout}}"
 ```
-### 5. Update environment variables – We use source command to update environment variables .this can be done in Ansible as
+### 5. Update environment variables
+We use source command to update environment variables .this can be done in Ansible as
 
 - name: Source Bashrc to Update Env Variables
   shell: source {{ installation_user_home }}/.bashrc
 
-### 6. Replace – There are some cases where we might need to replace things in the obtained values from remote hosts. We can do that in anisble as,
+### 6. Replace
+There are some cases where we might need to replace things in the obtained values from remote hosts. We can do that in anisble as,
 ```
 - name: Copy the jetty-https Template to the Remote Machine
     template:
@@ -135,24 +140,29 @@ Note - pipe ling will only work if the option requiretty is disabled on all remo
 [ssh_connection]
 pipelining = True
 ```
-### 8. Turn off Facts -if you are not using any facts in your playbook ,we can disable that using the
+### 8. Turn off Facts 
+if you are not using any facts in your playbook ,we can disable that using the
 ```
 - hosts: dev
   gather_facts: False
 ```
-### 9. Step by Step Task - an ansible playbook will run all the tasks in a sequential way. What if we want to check before running the task. --step in Ansible will let you decide which tasks you want to run
+### 9. Step by Step Task
+ansible playbook will run all the tasks in a sequential way. What if we want to check before running the task. --step in Ansible will let you decide which tasks you want to run
 ```
 ansible-playbook sample.yml --step
 ```
-### 10. Dry Run – Some time we want our Ansible scripts to run but with out making any changes. This is something like testing our [playbooks]. We can do this as
+### 10. Dry Run 
+Some time we want our Ansible scripts to run but with out making any changes. This is something like testing our [playbooks]. We can do this as
 ```
 ansible-playbook playbook.yml –check
 ```
-### 11. Pause a Playbook – In Some cases we want out playbook to pause until some other action on the remote machine is done. We can do this by adding,
+### 11. Pause a Playbook 
+In Some cases we want out playbook to pause until some other action on the remote machine is done. We can do this by adding,
 ```
 pause: prompt="waiting 60 Seconds" minutes=1 seconds=30
 ```
-### 12. List Tasks – There may be cases where we want to check the tasks available before running them. This can done by
+### 12. List Tasks
+There may be cases where we want to check the tasks available before running them. This can done by
 ```
 [root@cent delegate]# ansible-playbook --list-tasks sample-playbook.yml
 playbook: sample-playbook.yml
@@ -180,14 +190,15 @@ playbook: sample-playbook.yml
     - nginx
     - memcached
 ```
-### 16. gather_fact 
+### 16. gather_fact
 You know ansible gather_fact module take all info from remote server but you can't want ot take all info example only take network info. To do this, you have to keep gather_facts to True and also pass one more attribute named gather_subset to fetch specific remote information. Ansible supports network, hardware, virtual, facter, ohai as subset
 ```
 - hosts: web
   gather_facts: True
   gather_subset: network,virtual
 ```
-### 17. any_errors_fatal ,  Sometime it is desired to abort the entire play on failure of any task on any host, mainly needed as deploy any app
+### 17. any_errors_fatal
+Sometimes,  it is desired to abort the entire play on failure of any task on any host, mainly needed as deploy any app
 ```
 ---
 - hosts: web
@@ -212,7 +223,8 @@ it is usefull you want to do some task step at once and delegate to specific hos
         run_once: true
         delegate_to: 172.16.202.97
 ```
-### 20. no_log option you want ot add log log option specific task on playbook
+### 20. no_log
+you want to add no log option specific task on playbook
 ```
 ---
 - hosts: web
