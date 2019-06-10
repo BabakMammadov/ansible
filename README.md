@@ -1,7 +1,5 @@
 # Ansible is an open-source configuration management, application deployment, intraservice orchestration and provisioning automation tool.
-<p style='color:red'>This is some red text.</p>
-<font color="red">This is some text!</font>
-These are <b style='color:red'>red words</b>
+
 * About Ansible, terminilogy
 * Ad-hoc commands, find info about modules
 * Conditions
