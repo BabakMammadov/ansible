@@ -1,6 +1,6 @@
 # Ansible is an open-source configuration management, application deployment, intraservice orchestration and provisioning automation tool.
 ## Topics
-* About Ansible, terminilogy
+* About Ansible, terminalogy
 * Ad-hoc commands, find info about modules
 * Playbooks
 * Handlers
@@ -156,15 +156,18 @@ For this we must use handlers. Example is given "playbook_handler.yml" file
 ansible-playbook  playbook_handler.yml  -i  inventory.ini
 ```
 ### Conditions
+Lets suppose we have different version linux os in under of test group servers and don't want to use two  playbook yaml file for every os version(Ubuntu and centos). For this we will use "when" conditions sample. Second example just check file exist or no and take action on result of this file. Examples is given  playbook_condition.yml and playbook_condition_2.yml files
+In there register options using for register output of command 
+```
+ansible-playbook  playbook_condition.yml -i  inventory.ini
+ansible-playbook  playbook_condition_2.yml -i  inventory.ini
+```
 
+### Loops
+Lets suppose we want to install much more packages on remote server  and won't to write task for every new package. Therefore we use loops. Detailed example is given playbook_loop.yml file.
+In there debug module using for show you information. 
 
-
-
-
-### Loops 
-
-
-
+### How to store playbook result in variables
 
 ### Inventory
 ```

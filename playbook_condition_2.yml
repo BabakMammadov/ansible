@@ -1,0 +1,22 @@
+---
+- hosts: test
+  gather_facts: no
+  tasks:
+  - stat:
+      path: /root/sample_file.txt
+    register: result
+
+  - debug:
+      msg: "Ansible When File Exists Example."
+    when: result.stat.exists
+  
+  - debug:
+      msg: "Ansible Fil Doesn't exist"
+    when: result.stat.exists == false
+
+  - name: Create a file in Ansible if it does not exist example
+  - file:
+      path: /root/sample_file.txt_new
+      state: touch
+      mode: "u=rw,g=r,o=r" # mode= 0644 also works
+    when: result.stat.exists == false
