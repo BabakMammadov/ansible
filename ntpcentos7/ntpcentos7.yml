@@ -1,0 +1,34 @@
+---
+- hosts: cent
+  become_user: root
+  tasks:
+  #this task enable chrony is not installed , having chrony and ntp both on system may be couse issues
+    - name: remove chrony client package from the system
+      yum:
+       name=chrony
+       state=absent
+      tags: remove_chrony
+  # this task is to ensure ntp package is installed
+    - name:  check/install ntp client package
+      yum:
+       name=ntp
+       state=present
+      tags: install_ntp
+  # this task is to copy custom ntp.conf file
+    - name: deploy ntp.conf file to the clients
+      copy:
+       src=/root/ntp.conf
+       dest=/etc/ntp.conf
+       owner=root
+       group=root
+       mode=0644
+       backup=yes
+      notify: start_restart_ntp_client
+      tags: copy_ntp_conf,start_ntp
+  handlers:
+   #this task ensure ntp service is started
+    - name: start_restart_ntp_client
+      service:
+       name=ntpd
+       state=restarted
+       enabled=yes

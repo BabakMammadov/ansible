@@ -1,0 +1,4 @@
+---
+# vars file for tomcat
+version: 8.0.32
+http_port: 8084

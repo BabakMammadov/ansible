@@ -1,0 +1,18 @@
+---
+- hosts: cent
+
+  tasks:
+    - name: run echo Command
+      command: /bin/echo Hello Sample PlayBook
+
+    - name: get the IP address
+      shell: hostname
+      register: host_name
+
+    - name: Send Mail Alert
+      local_action: mail
+                    host="127.0.0.1"
+                    subject="[Ansible] Testing Mail"
+                    body="Hello the Play book ran successfully on {{ host_name.stdout }}"
+                    to="test@gmail.com"
+                    from="root"

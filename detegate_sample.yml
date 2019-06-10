@@ -1,0 +1,20 @@
+---
+- hosts: cent
+ 
+  tasks:
+    - name: Install zenity
+      action: yum name=zenity state=installed
+      
+    - name: configure zenity
+      action: template src=hosts dest=/tmp/zenity.conf
+
+    - name: Tell Master
+      action: shell echo "{{ansible_fqdn}} done" >> /tmp/list
+      delegate_to: 172.16.202.97
+
+    - name: writing hostname_output in ansible node in file on ansible node
+      lineinfile:
+        line: "{{ ansible_default_ipv4.address }},{{ ansible_facts['nodename'] }}"
+        dest:  ./inventory.txt
+        state: present
+      delegate_to: 127.0.0.1

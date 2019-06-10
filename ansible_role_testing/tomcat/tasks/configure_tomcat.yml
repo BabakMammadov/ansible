@@ -1,0 +1,33 @@
+---
+- name: Remove Older Tomcat Directories
+  file: path=/usr/local/tomcat state=absent
+
+- stat: path=/usr/local/
+  register: tc
+
+- name: Download Tomcat
+  get_url: url=http://a.mbbsindia.com/tomcat/tomcat-8/v8.0.32/bin/apache-tomcat-{{ version }}.tar.gz dest=/tmp mode=0755
+
+- name: Unpack Tomcat
+  unarchive: src=/tmp/apache-tomcat-{{ version }}.tar.gz dest=/usr/local/ copy=no
+  when: tc.isdir is undefined
+
+- name: Change Tomcat Directory Name
+  command: mv /usr/local/apache-tomcat-{{ version }} /usr/local/tomcat
+
+- name: Upload server.xml with modified Changes
+  template: src=server.xml dest=/usr/local/tomcat/conf
+  notify: restart tomcat
+
+- name: Upload tomcat-users.xml with users added
+  template: src=tomcat-users.xml  dest=/usr/local/tomcat/conf
+  notify: restart tomcat
+
+- name: Install Tomcat init.d Script
+  copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755  
+
+- name: Start Tomcat
+  service: name=tomcat state=started enabled=yes
+
+- name: Wait for Tomcat to Start on Port 8084
+  wait_for: host=172.16.202.96 port={{ http_port }}

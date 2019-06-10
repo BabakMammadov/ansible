@@ -1,0 +1,9 @@
+[test]
+ansibleclient1 
+# ansibleclient2    http_server_port=80   webserver_package=httpd
+
+[linuxservers:vars]
+http_server_port=80
+webserver_package=httpd
+webserver_package=httpd
+

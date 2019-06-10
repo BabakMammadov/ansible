@@ -1,0 +1,15 @@
+---
+- hosts: cent
+  tasks:
+    - name: run echo Command
+      command: /bin/echo Hello Sample PlayBook
+      tags:
+        - sample
+
+    - name: Create Sub Directories
+      file:
+         dest: "/tmp/html"
+         state: directory
+         mode: 755
+      tags:
+        - create

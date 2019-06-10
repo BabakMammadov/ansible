@@ -1,0 +1,5 @@
+---
+ - name: Install Java
+   copy: src=jdk-8u65-linux-x64.tar.gz dest=/tmp group=root owner=root mode=0755
+ - name: Unpack JAVA
+   unarchive: src=/tmp/jdk-8u65-linux-x64.tar.gz dest=/usr/local/ copy=no
