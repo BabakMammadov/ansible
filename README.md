@@ -1,12 +1,14 @@
-* About Ansible, terminilogy and Install
+#Ansible is an open-source automation tool.Configuration management, application deployment, intraservice orchestration and provisioning
+<span style="color:red;">Topics</span>
+* About Ansible, terminilogy
 * Ad-hoc commands, find info about modules
-* Conditins
+* Conditions
 * Loops
 * How to store playbook result in variables
 * Inventory, dynamic inventories
 * Tags
 * Delegation
-* Monitor - alert
+* Monitor-alert
 * Vault
 * Ansible Templating Jinja2 examples
 * Ansible roles
@@ -15,6 +17,21 @@
 * Testing Ansible roles with Molecule
 * Yaml lint and ansible lint.  YAML syntax 
 * Ansible galaxy
+
+## Add-doc commands
+
+
+## Find info about modules.
+```
+# List all ansible modules
+ansible-doc -l
+# Find specific module name f.e yum module
+ansible-doc -l  | grep yum
+# Look detail info about module
+ansible-doc module_name
+ansible-doc -s module_name
+ansible-doc apt
+```
 ## Inventory
 ```
 inventory.init file example
@@ -47,9 +64,9 @@ $ ansible testing -i hosts -m ping
 ansible-playbook sample-playbook.yml --tags sample
 ansible-playbook sample-playbook.yml --tags create
 ```
-## Local_action module allow youexecute commands  local ansible server
+## Local_action module allow you execute commands  local ansible server
 
-## Delegation , Say if you are patching a package on a machine and you need to continue until a certain file is available on another machine. This is done in Ansible using the delegation option. For example  detegate_sample.yml  execute all task  groups of cent server  but  Tell Master and  writing hostname_output in ansible node in file on ansible node
+## Delegation , Say if you are patching a package on a machine and you need to continue until a certain file is available on another machine. This is done in Ansible using the delegation option. For example  detegate_sample.yml  execute all task  groups of cent server  but Tell Master and  writing hostname_output in ansible node in file on ansible node
 
 ##  Ansible also provides us a way to make the Rest calls using URI module.The URI module allows us to send XML or JSON payload and get the necessary details. In this article we will see how we can use the URI module and make the Rest calls. As for the article I will be using the Nexus artifactory to connect which run on the 8081 Port. The URL are specified in the vars/main.yml file
 [rest_api_examples](http://jagadesh4java.blogspot.com/2016/09/ansible-rest-calls.html)
@@ -123,7 +140,7 @@ pipelining = True
 ```
 ansible-playbook sample.yml --step
 ```
-## 10. Dry Run – Some time we want our Ansible scripts to run but with out making any changes. This is something like testing our Scripts. We can do this as
+## 10. Dry Run – Some time we want our Ansible scripts to run but with out making any changes. This is something like testing our [playbooks]. We can do this as
 ```
 ansible-playbook playbook.yml –check
 ```
