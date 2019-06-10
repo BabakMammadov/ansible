@@ -1,4 +1,4 @@
-#Ansible is an open-source automation tool.Configuration management, application deployment, intraservice orchestration and provisioning
+# Ansible is an open-source automation tool.Configuration management, application deployment, intraservice orchestration and provisioning
 <span style="color:red;">Topics</span>
 * About Ansible, terminilogy
 * Ad-hoc commands, find info about modules
