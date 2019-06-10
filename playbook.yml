@@ -1,0 +1,17 @@
+---
+- hosts: test
+  tasks:
+    - name: Install the latest version of Apache
+      yum: name=httpd state=latest update_cache=yes
+      ignore_errors: yes
+
+    - name:  Instal openssl 
+      yum: name=openssh-server state=latest update_cache=yes
+      ignore_errors: yes
+
+    - name:  Instal vim
+      yum: name=vim state=latest update_cache=yes
+      ignore_errors: yes
+
+    - name: start Apache
+      service: name=httpd enabled=yes state=started
