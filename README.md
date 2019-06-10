@@ -2,8 +2,10 @@
 ## Topics
 * About Ansible, terminilogy
 * Ad-hoc commands, find info about modules
+* Playbook
 * Conditions
 * Loops
+* Handlers
 * How to store playbook result in variables
 * Inventory, dynamic inventories
 * Tags
@@ -19,7 +21,7 @@
 * Ansible galaxy
 
 ### Add-doc commands
-/etc/ansible/hosts file is default inventory file for ansible. We store here server,app and network inventories and related variables. Firstly, Ansible connect to remote servers and executed commands with ssh protocol therefore ansible able to login to server without password
+/etc/ansible/hosts file is default inventory file for ansible. We store here server,app and network inventories and related variables. Firstly, Ansible connect to remote servers and executed commands with ssh protocol therefore ansible able to login to server without password. Python must bu installed on the remote server
 [use_this_link_for_passwordless_to_linux_servers](https://github.com/BabakMammadov/ansible_auto_ssh)
 ```
 # Create sample group of host and make passwordless login to these servers using above script
@@ -30,16 +32,99 @@ cat /etc/ansible/hosts
 [prod]
 172.10.20.10
 
-# List all hosts default from hosts file
-ansible all  --list-hosts -i hosts
+# List all hosts default from hosts file(/etc/ansible/hosts)
+ansible all --list-hosts
 # List from other inventory file
-ansible all  --list-hosts -i local
+ansible all --list-hosts -i inventory.ini
 # List default inventory  and inside of group
-ansible prod_all --list-hosts
+ansible test --list-hosts
 # send command  specific group of servers and from  non-default inventory file
-ansible -i /etc/ansible/local local -a ‘uptime'
+ansible -i /etc/ansible/inventory.ini local -a ‘uptime'
 # Or specific hosts
-ansible -i local 172.16.100.131  -a ‘uptime' 
+ansible -i inventory.ini 172.16.100.131  -a ‘uptime'
+```
+Command&Shell&Raw Modules
+```
+# You can only execute binaries commands on the remote node with command module, but you cann't use buil-in functions or  shell redirections with command module
+ansible -i inventory.ini   172.16.100.131 -m command  -a 'who‘
+# Make output  on the single line
+ansible -i inventory.ini   172.16.100.131  -m command -a 'who ‘  -o
+
+Let's suppose, python doesn't exist remote server(Ubuntu some versions). Ansible won't be execute commands on remote server  and  give us python error. Thats way we can use ansible raw module and install firstly python on remote server
+ansible  -i inventory.ini  172.16.100.133  -m raw -a 'who'
+
+Install python to ubuntu server with raw module(After that we use another ansible module):
+ansible -i inventory.ini  172.16.100.135  -m  raw  -a "apt-get install python -y"
+
+Use shell builtIN functions(mostly we use built in func on the shell scripts) and redirections with ansible shell module
+Lest simulate redirection error with command module
+ansible  -i inventory.ini   172.16.100.131  -m command -a 'df -hT| grep xfs '
+172.16.100.131 | FAILED | rc=1 >>
+df: invalid option -- '|'
+
+ansible  -i inventory.ini 172.16.100.131  -m shell  -a 'df -hT| grep xfs '  
+172.16.100.131 | CHANGED | rc=0 >>
+/dev/mapper/centos-root xfs        17G 1003M   17G   6% /
+/dev/sda1               xfs      1014M  133M  882M  14% /boot
+
+ansible  -i inventory.ini 172.16.100.131  -m shell  -a 'df -h > /var/tmp/df.out’  
+ansible  -i inventory.ini 172.16.100.131  -m shell  -a 'cat /var/tmp/df.out’ 
+
+
+By default, ansible executed commands with root user on remote server if we use another sudo user and want to execute all tasks  with this user. For this we must be add this user to wheel group(administator group) and  sudoers file(nopassword option)
+
+# Do it on remote system
+useradd -m -d /home/user -s /bin/bash -k  /etc/skel -g user user
+echo "pass" | passwd --stdin user
+usermod -aG wheel user
+%wheel ALL=(ALL) NOPASSWD: ALL
+
+# In ansible server
+ansible  -i inventory.ini 172.16.100.131 -become  -u user  -a “whoami"
+
+# Install vim on the remote hosts with sudo user
+ansible  -i inventory.ini 172.16.100.131 -become  -u user  -m  raw  -a "yum install vim -y “
+
+# Use ansible default yum module
+ansible -i inventory.ini 172.16.100.131 -become  -u user  -m yum -a "name=httpd state=present" 
+
+# Connect remote server and check another server tcp port as below. We will use what_for ansible module for this in the future
+ansible -m shell -a "nc -w1 -zv 1.1.1.1  8080; echo $?  " test -become  -u user -i inventory.ini
+
+# Check internet connection on remote server
+ansible -m shell -a "echo 'wget www.az; echo $? ; rm -f index.html" test -become  -u user -i inventory.ini
+
+# File transfer(from ansible server  to remote hosts that under test group in the inventory file)
+ansible test  -m copy -a "src=/etc/hosts dest=/tmp/hosts" -i inventory.ini
+
+File module change owner and perm
+ansible test -m file -a "dest=/srv/foo/a.txt mode=600 owner=babak group=babak" -i inventory.ini
+
+The file module can also create directories, similar to mkdir -p:
+ansible test -m file -a "dest=/path/to/c mode=755 owner=babak group=babak state=directory" -i inventory.ini
+
+Working with git module
+ansible test -m git -a "repo=https://foo.example.org/repo.git dest=/srv/myapp version=HEAD" -i inventory.ini
+
+Gather  facts
+ansible  -i inventory.ini 172.16.100.131  -m setup 
+
+Create file
+ansible  -i inventory.ini 172.16.100.131 -m file -a 'path=/var/tmp/ansible_test.txt state=touch'
+
+Remove
+ansible  -i inventory.ini 172.16.100.131  -m file -a 'path=/var/tmp/ansible_test.txt state=absent'
+
+Create soft link
+ansible  -i inventory.ini 172.16.100.131 -m file -a 'src=/etc/hosts dest=/var/tmp/hosts state=link'
+
+Copy  file and Backup
+ansible  -i inventory.ini 172.16.100.131  -m copy -a 'src=/etc/hosts dest=/etc/hosts backup=yes’
+
+Extract specific info with gather_fact module
+ansible -m  setup  -i inventory.ini test -a 'filter=ansible_mounts'
+ansible -m  setup  -i inventory.ini test -a 'filter=ansible_distribution'
+ansible -m  setup  -i inventory.ini test  -a 'filter="ansible_kernel"'
 ```
 
 ### Find info about modules.
@@ -85,7 +170,8 @@ tags allow us execute only a subset of tasks defining them with tag attribute. e
 ansible-playbook sample-playbook.yml --tags sample
 ansible-playbook sample-playbook.yml --tags create
 ```
-### Local_action module allow you execute commands local ansible server
+### Local_action 
+allow you execute commands local ansible server
 
 ### Delegation
 Say if you are patching a package on a machine and you need to continue until a certain file is available on another machine. This is done in Ansible using the delegation option. For example  detegate_sample.yml  execute all task  groups of cent server  but Tell Master and  writing hostname_output in ansible node in file on ansible node
@@ -278,5 +364,5 @@ you want to add no log option specific task on playbook
     - include:  playbook2.yml 
     - include:  playbook3.yml 
 ```
-
+[Example to shell built in command on linux:](https://www.gnu.org/software/bash/manual/html_node/Shell-Builtin-Commands.html)
 [General-Info](http://jagadesh4java.blogspot.com/p/ansible.html)
