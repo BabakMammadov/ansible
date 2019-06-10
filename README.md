@@ -19,7 +19,28 @@
 * Ansible galaxy
 
 ### Add-doc commands
+/etc/ansible/hosts file is default inventory file for ansible. We store here server,app and network inventories and related variables. Firstly, Ansible connect to remote servers and executed commands with ssh protocol therefore ansible able to login to server without password
+[use_this_link_for_passwordless_to_linux_servers](https://github.com/BabakMammadov/ansible_auto_ssh)
+```
+# Create sample group of host and make passwordless login to these servers using above script
+cat /etc/ansible/hosts
+[test]
+172.16.100.131 
+172.20.20.13
+[prod]
+172.10.20.10
 
+# List all hosts default from hosts file
+ansible all  --list-hosts -i hosts
+# List from other inventory file
+ansible all  --list-hosts -i local
+# List default inventory  and inside of group
+ansible prod_all --list-hosts
+# send command  specific group of servers and from  non-default inventory file
+ansible -i /etc/ansible/local local -a ‘uptime'
+# Or specific hosts
+ansible -i local 172.16.100.131  -a ‘uptime' 
+```
 
 ### Find info about modules.
 ```
@@ -64,7 +85,7 @@ tags allow us execute only a subset of tasks defining them with tag attribute. e
 ansible-playbook sample-playbook.yml --tags sample
 ansible-playbook sample-playbook.yml --tags create
 ```
-### Local_action module allow you execute commands  local ansible server
+### Local_action module allow you execute commands local ansible server
 
 ### Delegation
 Say if you are patching a package on a machine and you need to continue until a certain file is available on another machine. This is done in Ansible using the delegation option. For example  detegate_sample.yml  execute all task  groups of cent server  but Tell Master and  writing hostname_output in ansible node in file on ansible node
@@ -116,10 +137,10 @@ When ever we want to pass variables to template we can use
 ```
 ### 5. Update environment variables
 We use source command to update environment variables .this can be done in Ansible as
-
+```
 - name: Source Bashrc to Update Env Variables
   shell: source {{ installation_user_home }}/.bashrc
-
+```
 ### 6. Replace
 There are some cases where we might need to replace things in the obtained values from remote hosts. We can do that in anisble as,
 ```
