@@ -59,17 +59,17 @@ test
 $ ansible testing -i hosts -m ping
 ```
 ### Tags
-###  tags allow us execute only a subset of tasks defining them with tag attribute. example given tags_sample.yml files, If you set sample  then execute only  run echo command task and etc
+tags allow us execute only a subset of tasks defining them with tag attribute. example given tags_sample.yml files, If you set sample  then execute only  run echo command task and etc
 ```
 ansible-playbook sample-playbook.yml --tags sample
 ansible-playbook sample-playbook.yml --tags create
 ```
-## Local_action module allow you execute commands  local ansible server
+### Local_action module allow you execute commands  local ansible server
 
-## Delegation 
+### Delegation
 Say if you are patching a package on a machine and you need to continue until a certain file is available on another machine. This is done in Ansible using the delegation option. For example  detegate_sample.yml  execute all task  groups of cent server  but Tell Master and  writing hostname_output in ansible node in file on ansible node
 
-##  Ansible also provides us a way to make the Rest calls using URI module.
+###  Ansible also provides us a way to make the Rest calls using URI module.
 The URI module allows us to send XML or JSON payload and get the necessary details. In this article we will see how we can use the URI module and make the Rest calls. As for the article I will be using the Nexus artifactory to connect which run on the 8081 Port. The URL are specified in the vars/main.yml file
 [rest_api_examples](http://jagadesh4java.blogspot.com/2016/09/ansible-rest-calls.html)
 
@@ -148,7 +148,7 @@ ansible-playbook sample.yml --step
 ```
 ansible-playbook playbook.yml –check
 ```
-##3 11. Pause a Playbook – In Some cases we want out playbook to pause until some other action on the remote machine is done. We can do this by adding,
+### 11. Pause a Playbook – In Some cases we want out playbook to pause until some other action on the remote machine is done. We can do this by adding,
 ```
 pause: prompt="waiting 60 Seconds" minutes=1 seconds=30
 ```
