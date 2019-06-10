@@ -2,10 +2,10 @@
 ## Topics
 * About Ansible, terminilogy
 * Ad-hoc commands, find info about modules
-* Playbook
+* Playbooks
+* Handlers
 * Conditions
 * Loops
-* Handlers
 * How to store playbook result in variables
 * Inventory, dynamic inventories
 * Tags
@@ -21,7 +21,7 @@
 * Ansible galaxy
 
 ### Add-doc commands
-/etc/ansible/hosts file is default inventory file for ansible. We store here server,app and network inventories and related variables. Firstly, Ansible connect to remote servers and executed commands with ssh protocol therefore ansible able to login to server without password. Python must bu installed on the remote server
+/etc/ansible/hosts file is default inventory file for ansible. We store here server,app and network inventories and related variables. Firstly, Ansible connect to remote servers and executed commands with ssh protocol therefore ansible able to login to server without passwor and python must be installed on the remote server
 [use_this_link_for_passwordless_to_linux_servers](https://github.com/BabakMammadov/ansible_auto_ssh)
 ```
 # Create sample group of host and make passwordless login to these servers using above script
@@ -50,14 +50,13 @@ ansible -i inventory.ini   172.16.100.131 -m command  -a 'who‘
 # Make output  on the single line
 ansible -i inventory.ini   172.16.100.131  -m command -a 'who ‘  -o
 
-Let's suppose, python doesn't exist remote server(Ubuntu some versions). Ansible won't be execute commands on remote server  and  give us python error. Thats way we can use ansible raw module and install firstly python on remote server
+# Let's suppose, python doesn't exist remote server(Ubuntu some versions). Ansible won't be execute commands on remote server  and  give us python error. Thats way we can use ansible raw module and install firstly python on remote server
 ansible  -i inventory.ini  172.16.100.133  -m raw -a 'who'
 
-Install python to ubuntu server with raw module(After that we use another ansible module):
+# Install python to ubuntu server with raw module(After that we use another ansible module):
 ansible -i inventory.ini  172.16.100.135  -m  raw  -a "apt-get install python -y"
 
-Use shell builtIN functions(mostly we use built in func on the shell scripts) and redirections with ansible shell module
-Lest simulate redirection error with command module
+# Use shell builtIN functions(mostly we use built in func on the shell scripts) and redirections with ansible shell module.Lets simulate redirection error with command module
 ansible  -i inventory.ini   172.16.100.131  -m command -a 'df -hT| grep xfs '
 172.16.100.131 | FAILED | rc=1 >>
 df: invalid option -- '|'
@@ -71,13 +70,20 @@ ansible  -i inventory.ini 172.16.100.131  -m shell  -a 'df -h > /var/tmp/df.out�
 ansible  -i inventory.ini 172.16.100.131  -m shell  -a 'cat /var/tmp/df.out’ 
 
 
-By default, ansible executed commands with root user on remote server if we use another sudo user and want to execute all tasks  with this user. For this we must be add this user to wheel group(administator group) and  sudoers file(nopassword option)
+# By default, ansible executed commands  user on remote server with root. if we want to use  another sudo user and want to execute all tasks  with this user. For this we must be add this user to wheel group(administator group) and  sudoers file(nopassword option)
 
 # Do it on remote system
 useradd -m -d /home/user -s /bin/bash -k  /etc/skel -g user user
 echo "pass" | passwd --stdin user
 usermod -aG wheel user
 %wheel ALL=(ALL) NOPASSWD: ALL
+
+Defination:
+-m module_name :  set it for  which module you will use
+-a "command" : set it for which commands will be executed on remote server
+-i inventory.ini ipOrgroup_of_servers :  set it for which servers it will be executed
+-become  -u user : set it for which user will execute these commands on remote server
+
 
 # In ansible server
 ansible  -i inventory.ini 172.16.100.131 -become  -u user  -a “whoami"
@@ -97,36 +103,35 @@ ansible -m shell -a "echo 'wget www.az; echo $? ; rm -f index.html" test -become
 # File transfer(from ansible server  to remote hosts that under test group in the inventory file)
 ansible test  -m copy -a "src=/etc/hosts dest=/tmp/hosts" -i inventory.ini
 
-File module change owner and perm
+# File module change owner and perm
 ansible test -m file -a "dest=/srv/foo/a.txt mode=600 owner=babak group=babak" -i inventory.ini
 
-The file module can also create directories, similar to mkdir -p:
+# The file module can also create directories, similar to mkdir -p:
 ansible test -m file -a "dest=/path/to/c mode=755 owner=babak group=babak state=directory" -i inventory.ini
 
-Working with git module
+# Working with git module
 ansible test -m git -a "repo=https://foo.example.org/repo.git dest=/srv/myapp version=HEAD" -i inventory.ini
 
-Gather  facts
-ansible  -i inventory.ini 172.16.100.131  -m setup 
+# Gather  facts is using for gather infor about remote system and then you can use this info as dynamic variables
+ansible  -i inventory.ini 172.16.100.131  -m setup
 
-Create file
+# Create file remote server
 ansible  -i inventory.ini 172.16.100.131 -m file -a 'path=/var/tmp/ansible_test.txt state=touch'
 
-Remove
+# Remove  file remote server
 ansible  -i inventory.ini 172.16.100.131  -m file -a 'path=/var/tmp/ansible_test.txt state=absent'
 
-Create soft link
+# Create soft link
 ansible  -i inventory.ini 172.16.100.131 -m file -a 'src=/etc/hosts dest=/var/tmp/hosts state=link'
 
-Copy  file and Backup
+# Copy  file and Backup
 ansible  -i inventory.ini 172.16.100.131  -m copy -a 'src=/etc/hosts dest=/etc/hosts backup=yes’
 
-Extract specific info with gather_fact module
+# Extract specific info with gather_fact module
 ansible -m  setup  -i inventory.ini test -a 'filter=ansible_mounts'
 ansible -m  setup  -i inventory.ini test -a 'filter=ansible_distribution'
 ansible -m  setup  -i inventory.ini test  -a 'filter="ansible_kernel"'
 ```
-
 ### Find info about modules.
 ```
 # List all ansible modules
@@ -138,6 +143,29 @@ ansible-doc module_name
 ansible-doc -s module_name
 ansible-doc apt
 ```
+### Playbook
+Lets suppose  we want to executed one more commands(tasks) on remote servers. It isn't best practise every time that we use  single line ansible command for doing something. It will be boring and complex on huge tasks.Therefore we use playbook and run one more tasks inside of the  one yaml file. Example is given in "playbook_handler.yml" file
+In this playbook we executed following tasks(install httpd,openssh,vim and start httpd service on under of test group servers).
+```
+ansible-playbook  playbook.yml  -i  inventory.ini
+```
+### Handlers
+Ansible playbook executed tasks as sequential. If we take latest playbook.yml in there all tasks executed step by step and latest  task will execute "Start apache service" task . It isn't not proper way because we want to start httpd service at  once after installed httpd service.
+For this we must use handlers. Example is given "playbook_handler.yml" file
+```
+ansible-playbook  playbook_handler.yml  -i  inventory.ini
+```
+### Conditions
+
+
+
+
+
+### Loops 
+
+
+
+
 ### Inventory
 ```
 inventory.init file example
