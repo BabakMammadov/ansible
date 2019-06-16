@@ -1,6 +1,6 @@
 # Ansible is an open-source configuration management, application deployment, intraservice orchestration and provisioning automation tool.
 ## Topics
-* About Ansible, terminalogy
+* About ansible
 * Ad-hoc commands, find info about modules
 * Playbooks
 * Handlers
@@ -11,21 +11,34 @@
 * Tags
 * Delegation
 * Variables(var,set_fact,special vars) and lookups
-* Paralel executings
+* URI module
+* Paralel executions
 * Error handling
-* Monitor-alert
 * Vault
 * Ansible Templating Jinja2 examples
 * Ansible roles
+* Tips_Tricks
+* Service discovery and managing multi enviroment
+* Application deployment, rolling updates 
+* VM Provisioning
 * Custom module and plugins  shell/python
 * Testing Ansible roles with Molecule
-* Tips_Tricks
-* Yaml lint and ansible lint.  YAML syntax
 * Ansible galaxy
 
+### About Ansible
+What can you do with ansible <br />
+- provisioning VM or cloud instance<br />
+- automate all  linux tasks <br />
+- automate routine network operation<br />
+- application deployment(Continuous Delivery)<br />
+
+It work over ssh protocol and agentless it means you don't need install any agent  remote system <br />
+
+Prepare yaml file, execute it and REACH YOUR GOALS! <br />
+
 ### Add-doc commands
-/etc/ansible/hosts file is default inventory file for ansible. We store here server,app and network inventories and related variables. Firstly, Ansible connect to remote servers and executed commands with ssh protocol therefore ansible able to login to server without passwor and python must be installed on the remote server
-[use_this_link_for_passwordless_to_linux_servers](https://github.com/BabakMammadov/ansible_auto_ssh)
+/etc/ansible/hosts file is default inventory file for ansible. We store here server,app and network inventories and related variables. Firstly, Ansible connect to remote servers and executed commands with ssh protocol therefore ansible able to login to server without passwor and python must be installed on the remote server<br />
+[use_this_link_for_passwordless_to_linux_servers](https://github.com/BabakMammadov/ansible_auto_ssh)<br />
 ```
 # Create sample group of host and make passwordless login to these servers using above script
 cat /etc/ansible/hosts
@@ -186,7 +199,7 @@ In there debug module using for show you information.
 ### How to store playbook task result on variables
 Sometimes you need to store the  result of  playbook task  to variable and take to action over this. For example you can find txt file some directory and copy to another directory. For this you can  "store_result_on_variable"   yaml example.
 
-### Inventory
+### Inventory,  dynamic inventories
 ```
 inventory.ini file example
 # Single
@@ -212,6 +225,11 @@ test
 
 $ ansible testing -i hosts -m ping
 ```
+Dynamic inventories 
+Often a user of a configuration management system will want to keep inventory in a different software system. Most infrastructure or systems can be managed with a custom inventory sources likes files, database, cloud scripts…etc. Ansible easily supports all of these options via an external inventory system. For example we write python code  and connect to mysql database  and response must be  as json. We set it ansible side.<br />
+[dynamic_ansible_inventory_plugin](https://docs.ansible.com/ansible/latest/user_guide/intro_dynamic_inventory.html)<br />
+[dynamic_ansible_inventory_scripts](http://devopstechie.com/creating-custom-dynamic-inventory-with-ansible-using-python/)<br />
+
 ### Tags
 tags allow us execute only a subset of tasks defining them with tag attribute. example given tags_sample.yml files, If you set sample  then execute only  run echo command task and etc
 ```
@@ -224,7 +242,7 @@ allow you execute commands local ansible server
 ### Delegation
 Say if you are patching a package on a machine and you need to continue until a certain file is available on another machine. This is done in Ansible using the delegation option. For example  detegate_sample.yml  execute all task  groups of cent server  but Tell Master and  writing hostname_output in ansible node in file on ansible node
 
-### Lookups
+### Variables(var,set_fact,special vars) and lookups
 Lookups are really useful for injecting dynamic data into your plays.<br />
 Facts are key-value pairs gathered via the setup module if you run gather facts in a play.<br />
 Vars are set by you.<br />
@@ -236,6 +254,27 @@ Examples is given on lookupexamples directory, loops and condition and role test
 ###  Ansible also provides us a way to make the Rest calls using URI module.
 The URI module allows us to send XML or JSON payload and get the necessary details. In this article we will see how we can use the URI module and make the Rest calls. As for the article I will be using the Nexus artifactory to connect which run on the 8081 Port. The URL are specified in the vars/main.yml file <br />
 [rest_api_examples](http://jagadesh4java.blogspot.com/2016/09/ansible-rest-calls.html)
+
+###  Paralel executions
+strategy: free      # run all task same time  <br />
+strategy: linear    # run task as sequency <br />
+strategy: debug     # run task of playbook as degug  mode <br />
+
+```
+- name: a play to run all tasks as fast as we can
+  hosts: servers
+  strategy: free
+  tasks:
+
+  ...
+
+- name: a play to run each task on each server before going to the next one    
+  hosts: servers
+  strategy: linear
+  tasks:
+```
+
+###  Error handling
 
 
 ### Ansible vault example
@@ -323,6 +362,15 @@ result is so: test.yml playbook read  "a" variable from  vars.yml and vars.yml r
 
 ```
 [encryped_string_and_use_playbook](https://medium.com/@schogini/ansible-vault-variables-a-tiny-demonstration-to-handle-secrets-a36132971015) <br/>
+
+###  Ansible Templating Jinja2 examples
+
+###  Ansible roles 
+Examples are given ansible_role_testing directory
+
+###  Custom module and plugins  shell/python
+
+###  Testing Ansible roles with Molecule
 
 ## Tips_Tricks
 ### 1. Obtain a Environment Variable – To retrieve a Environment variable we can use
@@ -505,6 +553,9 @@ you want to add no log option specific task on playbook
     - include:  playbook2.yml 
     - include:  playbook3.yml 
 ```
-[Example to shell built in command on linux:](https://www.gnu.org/software/bash/manual/html_node/Shell-Builtin-Commands.html) <br/>
+[ansible_for_devops_book](https://www.mindg.cn/download/ansible-for-devops.pdf) <br/>
+[ansible_advanced_hands_on_video_course](https://www.udemy.com/learn-ansible-advanced/?ranMID=39197&ranEAID=Fh5UMknfYAU&ranSiteID=Fh5UMknfYAU-paxAYXcjWsHvM7wcRKoEeg&LSNPUBID=Fh5UMknfYAU)<br/>
+[ansible_bootcamp_video_course](https://www.udemy.com/ultimate-ansible-bootcamp/?ranMID=39197&ranEAID=Fh5UMknfYAU&ranSiteID=Fh5UMknfYAU-biqDz.TdNUci.NVIxeECjg&LSNPUBID=Fh5UMknfYAU)<br/>
+[mastering_ansible_video_course](https://www.udemy.com/mastering-ansible-x/?ranMID=39197&ranEAID=Fh5UMknfYAU&ranSiteID=Fh5UMknfYAU-TwxNzZ1w5DAhWas0NlR1zQ&LSNPUBID=Fh5UMknfYAU)
 [Step by step basic tutorial](http://jagadesh4java.blogspot.com/p/ansible.html) <br/>
 [Top Tutorials on ansible](https://medium.com/quick-code/top-tutorials-to-learn-ansible-33afd23ea160)<br/>
