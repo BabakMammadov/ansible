@@ -1,0 +1,78 @@
+## Lookup env variable and it retrun only ansible host variables
+---
+- hosts: local
+  tasks:
+    - name: Printing the environment variable in Ansible
+      debug:
+        msg: "{{ lookup('env','USER','HOME','SHELL') }}"
+
+
+## Env variablesini hre hansi bir variableye tanitmaq lazimdir,
+---
+- hosts: local
+  vars:
+    local_shell:  "{{ lookup('env','SHELL') }}"
+  tasks:
+    - debug:
+        msg: "{{ local_shell }}"
+
+#For  taken remote variables
+---
+- hosts: local
+  gather_facts: true
+  tasks:
+    - name: Remote server ansible variables
+      debug:
+        msg: "{{ ansible_env.HOME }}"
+
+# Using grep commands in Ansible tasks, eger fayl olmasan yenede davam edecek hansi ki  ignore output ile ,when: grep_output.stdout != " bu ise eger output bos deyilse messagi gosterecek
+- hosts: all
+  tasks:
+  - name: Ansible grep pattern with ignore_errors example
+    shell: "grep -ir 'pattern' *.txt"
+    args:
+      chdir: "/Users/mdtutorials2/Documents/Ansible"
+    register: grep_output
+    ignore_errors: true
+
+  - debug:
+      var: grep_output.stdout_lines
+    when: grep_output.stdout != "
+
+# Working with date and timestamp in Ansible
+- hosts: all
+  tasks:
+  - name: Ansible date fact example
+    debug: var=ansible_date_time
+
+# Output
+ok: [172.16.100.131] => {
+    "ansible_date_time": {
+        "date": "2019-03-05",
+        "day": "05",
+        "epoch": "1551734369",
+        "hour": "01",
+        "iso8601": "2019-03-04T21:19:29Z",
+        "iso8601_basic": "20190305T011929998368",
+        "iso8601_basic_short": "20190305T011929",
+        "iso8601_micro": "2019-03-04T21:19:29.998451Z",
+        "minute": "19",
+        "month": "03",
+        "second": "29",
+        "time": "01:19:29",
+        "tz": "+04",
+        "tz_offset": "+0400",
+        "weekday": "Tuesday",
+        "weekday_number": "2",
+        "weeknumber": "09",
+        "year": "2019"
+    }
+}
+
+
+# Create file on remote with date
+---
+- hosts: all
+  tasks:
+  - name: Ansible timestamp filename example
+    command: touch example{{ansible_date_time.date}}.log

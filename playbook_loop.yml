@@ -1,0 +1,79 @@
+---
+- hosts: local
+  gather_facts: no
+
+  tasks:
+   - name: Install Packages
+     yum: name={{ item }} update_cache=yes state=latest
+     with_items:
+       - vim
+       - lsof
+       - nano
+       - screen
+       - net-tools
+     ignore_errors: True
+
+# Loop eexample 2
+---
+- hosts: local
+  gather_facts: no
+
+  tasks:
+   - name: Add group
+     group:
+       name: adb
+       state: present
+     ignore_errors: True
+
+   - name: add generic account users on all the hosts
+     user:
+       name: "{{ item }}"
+       state: present
+       groups: "adb"
+     loop:
+      - webadmin
+      - dbadmin
+     ignore_errors: True
+
+# Asagidaki item.0 index nomresidir 0 dan baslayir item.1 ise valuedir.
+- hosts: local
+  gather_facts: no
+
+  tasks:
+  - name: Ansible loop with index example
+    debug:
+      msg: "echo loop index at {{ item.0 +  3}} and value at {{item.1}}"
+    with_indexed_items:
+      - "hello1"
+      - "hello2"
+      - "hello3"
+
+---
+- hosts: local
+   gather_facts: no
+   vars:
+    - loop_1: "hello1"
+   tasks:
+    - name: Ansible loop with conditional example
+      debug:
+        msg: "Salam {{ item }} necesen ?"
+      with_items:
+        - "hello1"
+        - "hello2"
+        - "hello3"
+      when: item == "{{ loop_1 }}"
+
+---
+- hosts: local
+  gather_facts: no
+  vars:
+    Fruits:
+      Apple: 'Red'
+      Orange: 'Orange'
+      Grapes: 'Greem'
+  tasks:
+  - name: Ansible dictionary loop Example
+    debug:
+      msg: "Key is {{ item.key}} and color is {{item.value}}"
+    with_dict: "{{ Fruits }}"
+
