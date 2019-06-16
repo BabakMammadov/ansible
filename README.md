@@ -1,6 +1,6 @@
 # Ansible is an open-source configuration management, application deployment, intraservice orchestration and provisioning automation tool.
 ## Topics
-* About ansible
+* About ansible  
 * Ad-hoc commands, find info about modules
 * Playbooks
 * Handlers
@@ -33,12 +33,21 @@ What can you do with ansible <br />
 - application deployment(Continuous Delivery)<br />
 
 It work over ssh protocol and agentless it means you don't need install any agent  remote system <br />
-
 Prepare yaml file, execute it and REACH YOUR GOALS! <br />
+
+Let’s have a look at some of the terminology used in ansible: <br />
+- Controller Machine: Machine where Ansible is installed <br />
+- Inventory: Information regarding servers to be managed<br />
+- Playbook: Automation is defined using tasks defined in YAML format<br />
+- Task: Procedure to be executed<br />
+- Module: Predefined commands executed directly on remote hosts<br />
+- Play: Execution of a playbook<br />
+- Role: a Pre-defined way for organizing playbooks<br />
+- Handlers: Tasks with unique names that will only be executed if notified by another task<br />
 
 ### Add-doc commands
 /etc/ansible/hosts file is default inventory file for ansible. We store here server,app and network inventories and related variables. Firstly, Ansible connect to remote servers and executed commands with ssh protocol therefore ansible able to login to server without passwor and python must be installed on the remote server<br />
-[use_this_link_for_passwordless_to_linux_servers](https://github.com/BabakMammadov/ansible_auto_ssh)<br />
+[use_this_link_for_passwordless_login_to_linux_servers](https://github.com/BabakMammadov/ansible_auto_ssh)<br />
 ```
 # Create sample group of host and make passwordless login to these servers using above script
 cat /etc/ansible/hosts
