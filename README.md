@@ -132,6 +132,19 @@ ansible  -i inventory.ini 172.16.100.131  -m copy -a 'src=/etc/hosts dest=/etc/h
 ansible -m  setup  -i inventory.ini test -a 'filter=ansible_mounts'
 ansible -m  setup  -i inventory.ini test -a 'filter=ansible_distribution'
 ansible -m  setup  -i inventory.ini test  -a 'filter="ansible_kernel"'
+
+
+#Using Ansible setup’s module to gather information about your hosts
+ansible localhost -m setup
+localhost | SUCCESS => {
+  "ansible_facts": {
+    "ansible_all_ipv4_addresses": [
+        "10.27.12.77",
+        "192.168.33.1"
+    ],
+    (MANY more facts)
+  }
+
 ```
 ### Find info about modules.
 ```
@@ -169,7 +182,7 @@ Lets suppose we want to install much more packages on remote server  and won't t
 In there debug module using for show you information. 
 
 ### How to store playbook task result on variables
-
+Sometimes you need to store the  result of  playbook task  to variable and take to action over this. For example you can find txt file some directory and copy to another directory. For this you can  "store_result_on_variable"   yaml example.
 
 
 ### Inventory
@@ -218,6 +231,7 @@ Special vars are special variables that only Ansible uses, that you can use in v
 Examples is given on lookupexamples directory, loops and condition and role testing <br />
 [detailed_info_variables_and_fact_set_facts](https://www.oreilly.com/library/view/ansible-up-and/9781491979792/ch04.html)<br />
 [Jerakia is an open source, highly flexible data lookup tool for performing hierarchical data lookups from numerous data sources.](https://www.craigdunn.org/2017/08/hierarchical-data-lookups-ansible/)<br />
+
 ###  Ansible also provides us a way to make the Rest calls using URI module.
 The URI module allows us to send XML or JSON payload and get the necessary details. In this article we will see how we can use the URI module and make the Rest calls. As for the article I will be using the Nexus artifactory to connect which run on the 8081 Port. The URL are specified in the vars/main.yml file
 [rest_api_examples](http://jagadesh4java.blogspot.com/2016/09/ansible-rest-calls.html)
