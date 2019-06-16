@@ -11,13 +11,15 @@
 * Tags
 * Delegation
 * Variables(var,set_fact,special vars) and lookups
+* Paralel executings
+* Error handling
 * Monitor-alert
 * Vault
 * Ansible Templating Jinja2 examples
 * Ansible roles
-* To do things
 * Custom module and plugins  shell/python
 * Testing Ansible roles with Molecule
+* Tips_Tricks
 * Yaml lint and ansible lint.  YAML syntax
 * Ansible galaxy
 
@@ -184,7 +186,6 @@ In there debug module using for show you information.
 ### How to store playbook task result on variables
 Sometimes you need to store the  result of  playbook task  to variable and take to action over this. For example you can find txt file some directory and copy to another directory. For this you can  "store_result_on_variable"   yaml example.
 
-
 ### Inventory
 ```
 inventory.ini file example
@@ -233,13 +234,57 @@ Examples is given on lookupexamples directory, loops and condition and role test
 [Jerakia is an open source, highly flexible data lookup tool for performing hierarchical data lookups from numerous data sources.](https://www.craigdunn.org/2017/08/hierarchical-data-lookups-ansible/)<br />
 
 ###  Ansible also provides us a way to make the Rest calls using URI module.
-The URI module allows us to send XML or JSON payload and get the necessary details. In this article we will see how we can use the URI module and make the Rest calls. As for the article I will be using the Nexus artifactory to connect which run on the 8081 Port. The URL are specified in the vars/main.yml file
+The URI module allows us to send XML or JSON payload and get the necessary details. In this article we will see how we can use the URI module and make the Rest calls. As for the article I will be using the Nexus artifactory to connect which run on the 8081 Port. The URL are specified in the vars/main.yml file <br />
 [rest_api_examples](http://jagadesh4java.blogspot.com/2016/09/ansible-rest-calls.html)
 
 
-### Ansible vault example ??
+### Ansible vault example
+Sometimes you  need to store your password, ssh keys, tokens in your playbooks and roles and you don't want the public to see it's common to store Ansible configurations in version control, we need a way to store secrets securely that's way we use ansible vault<br />
+Example is given vault directory<br/>
+Example_1: <br/>
+```
+# Create users.yml  and set user password here for creating user on remote server(Actually we don't set plaintext password for user module on ansible playbook) just for example.
 
-## Things to do with ansible
+# Encrypt users.yml  with vault and set any password but keep in mind
+ansible-vault encrypt users.yml
+Confirm New Vault password: 
+Encryption successful
+
+# You can set password from file not with prompt
+ansible-vault encrypt users.yml  --vault-password-file=./vault-passwd
+
+
+# Look at users.yml  you will see encrypted file
+cat  users.yml 
+$ANSIBLE_VAULT;1.1;AES256
+35663436373264386131633839383035396265396463333135396239356566373638323333653533
+6132646230336664373461333863323737303232396230360a636663323533366530316631613137
+35636662663665653461626632363365326439376231323633646234653130363132663061326665
+6636656437623030630a336631333164393439623766623562653637633436333830393734386635
+6634
+
+# If you revert encrypted file to back
+ansible-vault decrypt users.yml 
+
+# If you look at encrypted file
+ansible-vault view users.yml 
+
+# If you edit encrypted file 
+ansible-vault edit users.yml 
+
+# Change exist vault pass for secret yaml
+ansible-vault rekey users.yml
+
+# If you run ansible-playbook users.yml with simple way you won't be because it was encrypted
+ansible-playbook users.yml  --ask-vault-pass
+
+# Write ansible vault pass to file and read from it
+ ansible-playbook users.yml --vault-password-file ./vault-passwd
+```
+[another_great-example_1](https://fritshoogland.wordpress.com/2018/05/28/all-about-ansible-vault/)  <br/>
+[another_great-example_2](https://medium.com/@schogini/ansible-vault-variables-a-tiny-demonstration-to-handle-secrets-a36132971015) <br/>
+
+## Tips_Tricks
 ### 1. Obtain a Environment Variable – To retrieve a Environment variable we can use
 ```
 - name: Copy JAVA_HOME location to variable
@@ -270,7 +315,7 @@ When ever we want to pass variables to template we can use
  - name: copy nexus-iq.sh start script
    template:
      src: nexus-iq.j2
-     dest: "{{nexus_iq_dir}}/nexus-iq.sh"
+     dest: "users.yml {{nexus_iq_dir}}/nexus-iq.sh"
      mode: "0755"
    vars:
      java_path: "{{java_loc.stdout}}"
@@ -420,5 +465,5 @@ you want to add no log option specific task on playbook
     - include:  playbook2.yml 
     - include:  playbook3.yml 
 ```
-[Example to shell built in command on linux:](https://www.gnu.org/software/bash/manual/html_node/Shell-Builtin-Commands.html)
-[General-Info](http://jagadesh4java.blogspot.com/p/ansible.html)
+[Example to shell built in command on linux:](https://www.gnu.org/software/bash/manual/html_node/Shell-Builtin-Commands.html) <br/>
+[General-Info](http://jagadesh4java.blogspot.com/p/ansible.html) <br/>

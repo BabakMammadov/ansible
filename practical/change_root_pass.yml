@@ -1,0 +1,14 @@
+---
+- hosts: webservers
+  remote_user: root
+  vars:
+  user_name: root
+  user_pass: $6$random_salt$MwMLypUkgMhNiJvc3rH94uAAkKMA6FD/wufSL7h75Z/DbXO4dKx84MV4PcYOW2msdxnGS/5pCz99VWl3wDfRq.
+  tasks:
+  - name: Updating Root Password
+    user: name={{ user_name }} update_password=always password={{ user_pass }}
+
+
+
+##Create your shadow password (linux) with
+## python -c 'import crypt; print crypt.crypt("YourPassword", "$6$random_salt")'

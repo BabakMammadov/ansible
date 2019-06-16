@@ -1,0 +1,13 @@
+---
+- hosts: 172.20.20.12
+  remote_user: root
+  tasks:
+  - name: Adding Users
+    user:
+     name: babak
+     password: babak@123
+     comment: "BabakMammadov"
+     shell: /bin/bash
+     group: wheel
+     createhome: yes
+     home: /home/babak
