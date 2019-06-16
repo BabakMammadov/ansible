@@ -281,8 +281,49 @@ ansible-playbook users.yml  --ask-vault-pass
 # Write ansible vault pass to file and read from it
  ansible-playbook users.yml --vault-password-file ./vault-passwd
 ```
-[another_great-example_1](https://fritshoogland.wordpress.com/2018/05/28/all-about-ansible-vault/)  <br/>
-[another_great-example_2](https://medium.com/@schogini/ansible-vault-variables-a-tiny-demonstration-to-handle-secrets-a36132971015) <br/>
+In this example we just encrypt playbook and run it but is isn't practical because every time we must decrypt playbook file for read. Practical version is create another properties  yaml file encrypt it with vault and then prepare ansible  playbook file and inject variable and read encrypted properties file from playbook <br/>
+```
+# Create variable file
+echo "vault_a: aaa" > touch vault.yml
+
+# Encrypt it and set password
+ansible-vault encrypt  vault.yml
+
+# See encrypted file
+cat vault.yml
+$ANSIBLE_VAULT;1.1;AES256
+39356336323836656332666130363936623364656631373737363035383133633736333562333036
+3137636566646237386639313463623062643137636565320a613638303936633361653931336362
+33663438343338393534306166343865336566343366633264653032366638333034373463323339
+3366626230656162390a373365663865303362313732653961663933636461376434316566333864
+39346338363332613631333166366435313237636538656363643233633365326437
+
+# Create main variables file and inject  vault_a variable  it as below
+cat vars.tml
+---
+a: "{{ vault_a }}"
+b: bbb
+
+# Prepare playbook file  but there you must insert encryped vault.yml and vars.yml 
+cat test.yml
+---
+- hosts: localhost
+  vars_files:
+    - "vars.yml"
+    - "vault.yml"
+  tasks:
+  - name: execute a shell command
+    shell: >
+      ls
+  - debug: msg="{{ a }} / {{ b }}"
+
+# Execute it 
+ansible-playbook test.yml  --ask-vault-pass
+
+result is so: test.yml playbook read  "a" variable from  vars.yml and vars.yml read it from encrypted vault.yml
+
+```
+[encryped_string_and_use_playbook](https://medium.com/@schogini/ansible-vault-variables-a-tiny-demonstration-to-handle-secrets-a36132971015) <br/>
 
 ## Tips_Tricks
 ### 1. Obtain a Environment Variable – To retrieve a Environment variable we can use
@@ -466,4 +507,5 @@ you want to add no log option specific task on playbook
     - include:  playbook3.yml 
 ```
 [Example to shell built in command on linux:](https://www.gnu.org/software/bash/manual/html_node/Shell-Builtin-Commands.html) <br/>
-[General-Info](http://jagadesh4java.blogspot.com/p/ansible.html) <br/>
+[Step by step basic tutorial](http://jagadesh4java.blogspot.com/p/ansible.html) <br/>
+[Top Tutorials on ansible](https://medium.com/quick-code/top-tutorials-to-learn-ansible-33afd23ea160)<br/>
