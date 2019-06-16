@@ -1,0 +1,7 @@
+---
+- hosts: 172.20.20.12
+  remote_user: root
+  vars:
+     contents: "{{ lookup('file', '/etc/profile') }}"
+  tasks:
+     - debug: msg="the value of file.txt is {{ contents }}"

@@ -1,0 +1,10 @@
+---
+- hosts: 172.20.20.12
+  remote_user: root
+  tasks:
+      - set_fact:
+          fact_time: "Fact: {{lookup('pipe', 'date \"+%H:%M:%S\"')}}"
+
+      - debug: var=fact_time
+      - command: sleep 2
+      - debug: var=fact_time

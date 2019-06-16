@@ -1,0 +1,12 @@
+---
+- hosts: test
+  tasks:
+  - name: Ansible register variable basic example
+    shell: "find *.txt"
+    args:
+      chdir: "/var/log/"
+    register: find_output
+
+  - debug:
+      var: find_output
+

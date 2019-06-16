@@ -10,6 +10,7 @@
 * Inventory, dynamic inventories
 * Tags
 * Delegation
+* Variables(var,set_fact,special vars) and lookups
 * Monitor-alert
 * Vault
 * Ansible Templating Jinja2 examples
@@ -27,7 +28,7 @@
 # Create sample group of host and make passwordless login to these servers using above script
 cat /etc/ansible/hosts
 [test]
-172.16.100.131 
+172.16.100.131
 172.20.20.13
 [prod]
 172.10.20.10
@@ -167,11 +168,13 @@ ansible-playbook  playbook_condition_2.yml -i  inventory.ini
 Lets suppose we want to install much more packages on remote server  and won't to write task for every new package. Therefore we use loops. Detailed example is given playbook_loop.yml file.
 In there debug module using for show you information. 
 
-### How to store playbook result in variables
+### How to store playbook task result on variables
+
+
 
 ### Inventory
 ```
-inventory.init file example
+inventory.ini file example
 # Single
 172.16.202.96 ansible_ssh_user=root
 172.16.202.97 ansible_ssh_user=root
@@ -201,12 +204,20 @@ tags allow us execute only a subset of tasks defining them with tag attribute. e
 ansible-playbook sample-playbook.yml --tags sample
 ansible-playbook sample-playbook.yml --tags create
 ```
-### Local_action 
+### Local_action
 allow you execute commands local ansible server
 
 ### Delegation
 Say if you are patching a package on a machine and you need to continue until a certain file is available on another machine. This is done in Ansible using the delegation option. For example  detegate_sample.yml  execute all task  groups of cent server  but Tell Master and  writing hostname_output in ansible node in file on ansible node
 
+### Lookups
+Lookups are really useful for injecting dynamic data into your plays.
+Facts are key-value pairs gathered via the setup module if you run gather facts in a play.
+Vars are set by you.
+Special vars are special variables that only Ansible uses, that you can use in vars.
+Examples is given on lookupexamples directory
+[detailed_info_variables_and_fact_set_facts](https://www.oreilly.com/library/view/ansible-up-and/9781491979792/ch04.html)
+[Jerakia is an open source, highly flexible data lookup tool for performing hierarchical data lookups from numerous data sources.](https://www.craigdunn.org/2017/08/hierarchical-data-lookups-ansible/)
 ###  Ansible also provides us a way to make the Rest calls using URI module.
 The URI module allows us to send XML or JSON payload and get the necessary details. In this article we will see how we can use the URI module and make the Rest calls. As for the article I will be using the Nexus artifactory to connect which run on the 8081 Port. The URL are specified in the vars/main.yml file
 [rest_api_examples](http://jagadesh4java.blogspot.com/2016/09/ansible-rest-calls.html)

@@ -1,0 +1,8 @@
+---
+- hosts: 172.20.20.12
+  remote_user: root
+  vars:
+    ntp_servers: [ 0.pool.ntp.org, 1.pool.ntp.org, 2.pool.ntp.org ]
+  tasks:
+    - name: Configure NTP
+      template: src=./ntp.conf.j2 dest=/etc/ntp.conf
