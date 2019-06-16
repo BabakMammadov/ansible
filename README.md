@@ -240,8 +240,7 @@ The URI module allows us to send XML or JSON payload and get the necessary detai
 
 ### Ansible vault example
 Sometimes you  need to store your password, ssh keys, tokens in your playbooks and roles and you don't want the public to see it's common to store Ansible configurations in version control, we need a way to store secrets securely that's way we use ansible vault<br />
-Example is given vault directory<br/>
-Example_1: <br/>
+Examples are given vault directory<br/>
 ```
 # Create users.yml  and set user password here for creating user on remote server(Actually we don't set plaintext password for user module on ansible playbook) just for example.
 
@@ -281,7 +280,7 @@ ansible-playbook users.yml  --ask-vault-pass
 # Write ansible vault pass to file and read from it
  ansible-playbook users.yml --vault-password-file ./vault-passwd
 ```
-In this example we just encrypt playbook and run it but is isn't practical because every time we must decrypt playbook file for read. Practical version is create another properties  yaml file encrypt it with vault and then prepare ansible  playbook file and inject variable and read encrypted properties file from playbook <br/>
+In this example we just encrypt playbook and run it but is isn't practical because every time we must decrypt playbook file for read and change. Practical version is create another properties  yaml file and  encrypt it with vault. then prepare ansible  playbook file and insert encryped variable yamls files and read encrypted properties file from encryped variable yaml <br/>
 ```
 # Create variable file
 echo "vault_a: aaa" > touch vault.yml
