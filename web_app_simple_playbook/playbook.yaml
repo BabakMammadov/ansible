@@ -1,0 +1,56 @@
+- name: Deploy Web App Server
+  hosts: db_web_servers
+  become: yes
+
+  tasks:
+    - name: Install All dependencies
+      apt: name={{ item }} state=present
+      with_items:
+        - python3.4
+        - python3-setuptools
+        - python3.4-dev
+        - build-essential
+        - python3-pip
+        - python-mysqldb
+        - python3-mysql.connector 
+      register: check_install_dependency
+  
+    - name: Install Mysql Server
+      apt: name={{ item }} state=present
+      with_items:
+        - mysql-server
+        - mysql-client
+      register: check_mysql_install
+
+    - name: Start Mysql Service
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+
+    - name: Create App Database
+      mysql_db: name=employeedb state=present
+
+    - name: Create database user
+      mysql_user:
+        name: db_user
+        password: vagrant
+        priv: '*.*:ALL'
+        state: present
+        host: '%'
+
+    - name: Install Python Flask dependencies
+      shell: pip3 install  flask flask-mysql
+      register: check_flask_install_dependency
+
+    - name: Copy source code
+      copy: src=app.py  dest=/opt/app.py
+
+    - name: Start Web Server
+      shell: export FLASK_APP=/opt/app.py &&  export LC_ALL=en_US.utf-8 && export LANG=en_US.utf-8 && nohup flask run --host=0.0.0.0 & 
+      register: flusk_run
+
+
+    - name: Pring depencency output
+      debug:
+        msg: "Output is  {{ flusk_run }}"  

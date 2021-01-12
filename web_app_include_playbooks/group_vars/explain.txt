@@ -1,0 +1,1 @@
+# For example Burada ise playbookda daxilindeki istidae olunan butun hostlara yeni variable istidae olunacaq ve istifade olunan group host adi ile bu eyni olmalidir.

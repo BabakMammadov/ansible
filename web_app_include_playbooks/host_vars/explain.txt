@@ -1,0 +1,2 @@
+# For example Eger sen playbook'un hosts hissessinde ayrica hostlar teyin etseydin o zaman burada her bir hosta gore variableler yaradacaqdin hansi ki fayl adlari playbookda host adi ile yeni 
+olmalidir bu zaman hemin playbook ishleyen zaman ozune uygun variableler istifade edecekdir.

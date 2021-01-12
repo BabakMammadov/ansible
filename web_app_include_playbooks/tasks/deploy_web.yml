@@ -1,0 +1,15 @@
+    - name: Install Python Flask dependencies
+      shell: pip3 install  flask flask-mysql
+      register: check_flask_install_dependency
+
+    - name: Copy source code
+      copy: src=app.py  dest=/opt/app.py
+
+    - name: Start Web Server
+      shell: export FLASK_APP=/opt/app.py &&  export LC_ALL=en_US.utf-8 && export LANG=en_US.utf-8 && nohup flask run --host=0.0.0.0 & 
+      register: flask_run
+
+
+    - name: Pring depencency output
+      debug:
+        msg: "Output is  {{ flask_run }}"  

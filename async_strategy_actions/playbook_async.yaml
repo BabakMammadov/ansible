@@ -1,0 +1,19 @@
+- name: Deploy Web App Server
+  hosts: db_web_servers
+  become: yes
+  tasks:
+    - command: /opt/monitor_db.py
+      async: 360
+      poll: 0
+      register: db_result
+
+    - command: /opt/monitor_web.py
+      async: 360
+      poll: 0
+      register: web_result
+
+    - name:  Check Status of the task
+      async_status: jid={{ db_result.ansible_job_id  }}
+      register: job_result
+      until: job_result.finished
+      retries: 60

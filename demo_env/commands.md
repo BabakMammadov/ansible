@@ -1,0 +1,1 @@
+# ansible target02 -m ping   -i  inventory.txt

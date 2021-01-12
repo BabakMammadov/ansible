@@ -1,0 +1,12 @@
+- name: Deploy Web App Server
+  hosts: db_web_servers
+  become: yes
+  vars_files:
+    - global_vars/variables.yaml
+  tasks:
+    - include: tasks/setup_web_db_dep.yml
+    - include: tasks/deploy_db.yml
+    - include: tasks/deploy_web.yml
+  
+
+

@@ -1,0 +1,13 @@
+- name: Deploy Web App Server
+  hosts: db_web_servers
+  become: yes
+  vars_files:
+    - global_vars/variables.yaml
+  roles:
+   - python
+   - mysql_db
+   - flask_web
+
+  
+
+

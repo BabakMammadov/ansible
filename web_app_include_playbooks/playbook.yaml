@@ -1,0 +1,10 @@
+- name: Deploy Web App Server
+  hosts: db_web_servers
+  become: yes
+  tasks:
+    - include: tasks/setup_web_db_dep.yml
+    - include: tasks/deploy_db.yml
+    - include: tasks/deploy_web.yml
+  
+
+

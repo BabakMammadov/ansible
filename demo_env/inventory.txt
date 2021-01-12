@@ -1,0 +1,2 @@
+target01 ansible_host=172.20.60.21 ansible_ssh_pass=vagrant  ansible_ssh_user=vagrant 
+target02 ansible_host=172.20.60.22 ansible_ssh_pass=vagrant  ansible_ssh_user=vagrant 
