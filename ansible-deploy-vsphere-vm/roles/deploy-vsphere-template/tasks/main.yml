@@ -1,0 +1,37 @@
+- name: Create VM from template
+  vmware_guest:
+    validate_certs: False
+    hostname: "{{ vsphere_host }}"
+    username: "{{ vsphere_user }}"
+    password: "{{ vsphere_password }}"
+    esxi_hostname: "{{ esxhost }}"
+    datacenter: "{{ vsphere_datacenter }}"
+    folder: "{{ vsphere_folder }}"
+    guest_id: "{{ guest_id }}"
+    name: "{{ vm_name }}"
+    template: "{{ vmtemplate }}"
+    disk:
+      - size: "{{ guest_disk_size }}"
+        type: "{{ guest_disk_type }}"
+        state: present
+        datastore: "{{ guest_datastore }}"
+    networks:
+      - name: "{{ guest_network }}"
+        ip: "{{ guest_ip }}"
+        netmask: "{{ guest_netmask }}"
+        gateway: "{{ guest_gateway }}"
+        type: "{{ guest_type }}"
+    customization:
+      domain: "{{ guest_domain_name }}"
+      dns_servers:
+        - "{{ guest_dns_server }}"
+      hostname: "{{ guest_hostname }}"
+      ignore_errors: yes
+    hardware:
+      memory: "{{ guest_memory }}"
+      num_cpus: "{{ guest_vcpu }}"
+      hotadd_cpu: True
+      hotadd_memory: True
+    wait_for_ip_address: True
+    state: poweredon
+  delegate_to: localhost

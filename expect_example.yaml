@@ -1,0 +1,16 @@
+---
+- hosts: preprod
+  tasks:
+    - name: 
+      shell: |
+        set timeout 300
+        spawn sudo su -
+        expect "ops:"
+        send {{ hxgWfrbaJLXyG9ssrfBj​ }}\r
+        expect "]#"
+        send {{  echo "devops ALL=(ALL)    NOPASSWD:ALL" > /etc/sudoers.d/90-init-users }}\r
+        interact
+        exit 0
+      args:
+        executable: /usr/bin/expect
+      changed_when: false

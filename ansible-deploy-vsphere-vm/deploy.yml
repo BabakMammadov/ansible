@@ -1,0 +1,7 @@
+- name: Create a virtual machine from a template
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - deploy_vars
+  roles:
+    - deploy-vsphere-template

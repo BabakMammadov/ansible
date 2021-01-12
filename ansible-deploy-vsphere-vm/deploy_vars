@@ -1,0 +1,25 @@
+# Infrastructure
+vsphere_host: 10.10.100.2
+vsphere_user: administrator@vsphere.local
+vsphere_password: vcenterpassword
+esxhost: 10.10.100.3
+vsphere_datacenter: DATACENTER
+vsphere_folder: /vm
+vm_name: centosvm
+
+# Guest
+guest_disk_size: 16gb
+guest_disk_type: eagerzeroedthick
+guest_datastore: DATARaid5
+guest_network: VM Network
+guest_ip: 10.10.100.4
+guest_netmask: 255.255.255.0
+guest_gateway: 10.10.100.1
+guest_type: static
+guest_domain_name: test.local
+guest_dns_server: 8.8.8.8
+guest_hostname: sysadm
+guest_memory: 1gb
+guest_vcpu: 1
+guest_id: centos64Guest
+vmtemplate: centos7-template-vm

@@ -568,3 +568,17 @@ you want to add no log option specific task on playbook
 [mastering_ansible_video_course](https://www.udemy.com/mastering-ansible-x/?ranMID=39197&ranEAID=Fh5UMknfYAU&ranSiteID=Fh5UMknfYAU-TwxNzZ1w5DAhWas0NlR1zQ&LSNPUBID=Fh5UMknfYAU)
 [Step by step basic tutorial](http://jagadesh4java.blogspot.com/p/ansible.html) <br/>
 [Top Tutorials on ansible](https://medium.com/quick-code/top-tutorials-to-learn-ansible-33afd23ea160)<br/>
+
+
+
+Readable
+https://blog.crisp.se/2018/01/27/maxwenzin/how-to-run-ansible-tasks-in-parallel
+https://medium.com/@ibrahimgunduz34/parallel-playbook-execution-in-ansible-30799ccda4e0
+https://shadow-soft.com/turbo-charge-your-ansible/
+https://blog.knoldus.com/ansible-playbook-using-templates/
+https://medium.com/@abhijeet.kamble619/ansible-molecule-test-using-docker-79a2e3e527a0
+https://www.digitalocean.com/community/tutorials/how-to-manage-multistage-environments-with-ansible
+
+SSH bastion host
+https://blog.scottlowe.org/2015/12/24/running-ansible-through-ssh-bastion-host/
+https://blog.keyboardinterrupt.com/ansible-jumphost/
