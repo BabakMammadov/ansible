@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  gather_facts: false
+  vars_prompt:
+    - name: "vmware_vcenter_username"
+      prompt: "Enter your vCenter username"
+      private: false
+
+    - name: "vmware_vcenter_password"
+      prompt: "Enter your vCenter password"
+      private: true
+  roles:
+    - vpshere_vm_ops

@@ -1,0 +1,4 @@
+roles/
+*.retry
+molecule/*/.molecule
+tests/*.pyc
