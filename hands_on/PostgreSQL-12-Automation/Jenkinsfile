@@ -1,0 +1,20 @@
+pipeline {
+    agent { label 'master' }
+    stages {
+        stage('Set Jenkins job name') {
+            steps { script { currentBuild.displayName = "${JOB_NAME}_${BUILD_NUMBER}" } }
+        }
+        stage('Execute Shell') {
+            steps {
+                withCredentials([string(credentialsId: 'vaultpass', variable: 'vaultpass')]) {
+                sh '''
+                   mkfifo vaultpass.dat
+                   echo "${vaultpass}" > vaultpass.dat &                   
+                   ansible-playbook playbook.yml -e please=${Action} --vault-password-file vaultpass.dat
+                '''
+                }
+            }
+        }
+    }
+    post { always { cleanWs() } }
+}

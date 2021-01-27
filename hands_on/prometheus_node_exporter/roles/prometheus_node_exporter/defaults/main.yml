@@ -1,0 +1,13 @@
+---
+# defaults file for prometheus_node_exporter
+service_name: node_exporter
+prometheus_node_exporter_manage_user: true
+prometheus_node_exporter_service_username: prometheus
+prometheus_node_exporter_service_group: prometheus
+
+prometheus_node_exporter_enabled_collectors: []
+prometheus_node_exporter_disabled_collectors: []
+
+prometheus_node_exporter_config_flags:
+  'web.listen-address': '0.0.0.0:9100'
+  'log.level': 'info'

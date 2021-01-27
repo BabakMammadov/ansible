@@ -1,0 +1,11 @@
+- name: The Prometheus Node Exporter role
+  hosts: nodeexporter
+  become: yes
+
+  vars:
+    prometheus_node_exporter_enabled_collectors:
+      - systemd
+      - tcpstat
+      - processes
+  roles:
+    - prometheus_node_exporter

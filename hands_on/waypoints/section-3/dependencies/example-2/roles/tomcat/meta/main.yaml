@@ -1,3 +1,0 @@
----
-dependencies:
-  - { role: java, java_package: openjdk-9-jre }

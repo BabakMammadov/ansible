@@ -1,0 +1,11 @@
+---
+# handlers file for prometheus_node_exporter
+- name: reload systemd
+  systemd:
+    name: systemd
+    daemon_reload: true
+
+- name: restart "{{ service_name }}"
+  systemd:
+    name: "{{ service_name }}"
+    state: restarted

@@ -1,3 +1,0 @@
----
-- name: dotcms reload systemd
-  command: systemctl daemon-reload

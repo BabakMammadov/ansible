@@ -1,3 +1,0 @@
----
-- name: install pip
-  package: name=python-pip state=installed

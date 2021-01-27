@@ -1,0 +1,12 @@
+[PGSQL]
+PGSQL_SERVER
+[PGSQL:vars]
+# ansible_ssh_host=targethost 
+# ansible_ssh_port=targetport
+# ansible_user=targetuser
+# ansible_ssh_pass=targetpass
+# ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ansible_ssh_host=192.168.150.137
+ansible_ssh_port=22
+ansible_user=root
+ansible_ssh_pass=123456

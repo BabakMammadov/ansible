@@ -1,0 +1,19 @@
+[Unit]
+Description=Prometheus Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User={{ prometheus_node_exporter_service_username }}
+Group={{ prometheus_node_exporter_service_group }}
+PermissionsStartOnly=true
+SyslogIdentifier={{ service_name }}
+ExecStartPre=-/bin/mkdir -p  /var/log/{{ service_name }}
+ExecStartPre=-/bin/chown -R {{ prometheus_node_exporter_service_username }}:{{ prometheus_node_exporter_service_group }}  /var/log/{{ service_name }} /home/prometheus
+ExecStart=/bin/bash -c '/home/{{ prometheus_node_exporter_service_username }}/{{ service_name }}/{{ service_name }} {% for enabled in prometheus_node_exporter_enabled_collectors %}--collector.{{ enabled }} {% endfor %}  {% for disabled in prometheus_node_exporter_disabled_collectors %}--no-collector.{{ disabled }} {% endfor %}  {% for flag, flag_value in prometheus_node_exporter_config_flags.items() %}--{{ flag }}={{ flag_value }} {% endfor %}  >> /var/log/{{ service_name }}/{{ service_name }}.log  2>&1'
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=default.target
